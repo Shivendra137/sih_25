@@ -1,5 +1,8 @@
-const express = require('express');
-const app = express();
-const apiRoutes = require('./routes/apiRoutes');
-const bodyParser = require('body-parser');
+// src/index.js
+require('dotenv').config();
+const app = require('./app');
 
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server listening on http://localhost:${PORT}`);
+});
