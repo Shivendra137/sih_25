@@ -34,5 +34,41 @@ async function verify(req,res){
     }
 }
 
+async function missionRegister(req, res) {
+    try {
+        const owner = req.user; // Assuming you have auth middleware setting req.user
+        const { title, description, deadline } = req.body;
 
-module.exports = {verify}
+        if (!title || !description) {
+            return res.status(400).json({
+                error: "Title and description are required"
+            });
+        }
+
+        const newMission = new Mission({
+            title,
+            description,
+            deadline: deadline || null,
+            owner: owner._id,
+            status: 'pending_verification', // default initial status
+            created_at: new Date()
+        });
+
+        await newMission.save();
+
+        return res.status(201).json({
+            message: "Mission registered successfully",
+            mission: newMission
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: "Server error"
+        });
+    }
+}
+
+
+
+
+module.exports = {verify, missionRegister}
