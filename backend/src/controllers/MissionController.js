@@ -3,7 +3,7 @@ async function verify(req,res){
     const verifier = req.user;
     const missionId = req.params.id;
     const {action,notes} = req.body;
-    const mission = await Mission.findBy(missionId);
+    const mission = await Mission.findById(missionId);
     if(!mission) return res.status(404).json({
         error : 'Mission not found'
     });
@@ -34,5 +34,41 @@ async function verify(req,res){
     }
 }
 
+async function missionRegister(req, res) {
+    try {
+        const owner = req.user; 
+        const { title, description, deadline } = req.body;
 
-module.exports = {verify}
+        if (!title || !description) {
+            return res.status(400).json({
+                error: "Title and description are required"
+            });
+        }
+
+        const newMission = new Mission({
+            title,
+            description,
+            deadline: deadline || null,
+            owner: owner._id,
+            status: 'pending_verification',
+            created_at: new Date()
+        });
+
+        await newMission.save();
+
+        return res.status(201).json({
+            message: "Mission registered successfully",
+            mission: newMission
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            error: "Server error"
+        });
+    }
+}
+
+
+
+
+module.exports = {verify, missionRegister}
