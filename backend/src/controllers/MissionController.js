@@ -36,7 +36,7 @@ async function verify(req,res){
 
 async function missionRegister(req, res) {
     try {
-        const owner = req.user; // assuming auth middleware sets req.user
+        // const owner = req.user; // assuming auth middleware sets req.user
         const { project, plot, missionId, numImages, avgCanopyFraction, notes } = req.body;
         if (!project || !missionId) {
             return res.status(400).json({
