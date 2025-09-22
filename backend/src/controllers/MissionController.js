@@ -36,22 +36,25 @@ async function verify(req,res){
 
 async function missionRegister(req, res) {
     try {
-        const owner = req.user;
+        const owner = req.user; // assuming auth middleware sets req.user
         const { project, plot, missionId, numImages, avgCanopyFraction, notes } = req.body;
         if (!project || !missionId) {
             return res.status(400).json({
                 error: "Project ID and Mission ID are required"
             });
         }
+
+        // Create new Mission document
         const newMission = new Mission({
-            project,                // must be a valid ObjectId
-            plot: plot || null,     // optional
-            missionId,              // unique mission identifier
+            project,                     // required
+            plot: plot || null,          // optional
+            missionId,                   // required
             numImages: numImages || 0,
             avgCanopyFraction: avgCanopyFraction || 0.0,
             notes: notes || '',
-            verification_status: 'pending', // default verification status
-            owner: owner._id || 12321     // if you want to track owner, you may need to add it to schema
+            status: 'pending',           // default status
+            created_at: new Date()
+            // verified_by, verified_at, verification_notes remain null initially
         });
 
         await newMission.save();
