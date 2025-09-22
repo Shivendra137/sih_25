@@ -20,7 +20,11 @@ const MissionSchema = new Schema({
   plot: { type: Schema.Types.ObjectId, ref: 'Plot' },      // optional: mission may cover multiple plots later
   missionId: { type: String, required: true, index: true },
   numImages: { type: Number, default: 0 },
-  verification_status : {type:String, re}
+  status : {type: String, enum:["pending","verified","rejected"],default : "pending"},
+  verified_by: { type: Schema.Types.ObjectId, ref: 'User' },
+  verified_at: { type: Date },
+  verification_notes: { type: String },
+  created_at: { type: Date, default: Date.now },
   avgCanopyFraction: { type: Number, default: 0.0 }, // 0..1
   notes: { type: String },
   createdAt: { type: Date, default: Date.now }
