@@ -18,8 +18,6 @@ mongoose
   .then(() => console.log("MongoDB Atlas connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// Routes
-app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
