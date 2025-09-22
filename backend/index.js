@@ -2,14 +2,14 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-
+const owner =require("./src/routes/owner")
 
 const app = express();
 
 // Middleware
 app.use(express.json()); // to parse JSON requests
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); // <--- for form data
+
+
 
 // Connect MongoDB
 mongoose
@@ -17,6 +17,8 @@ mongoose
   .then(() => console.log("MongoDB Atlas connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
+
+app.use('/api/owner', owner);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

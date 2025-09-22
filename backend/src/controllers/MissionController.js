@@ -36,7 +36,7 @@ async function verify(req,res){
 
 async function missionRegister(req, res) {
     try {
-        const owner = req.user; // assuming auth middleware sets req.user
+        // const owner = req.user; // assuming auth middleware sets req.user
         const { project, plot, missionId, numImages, avgCanopyFraction, notes } = req.body;
 
         // Validate required fields
@@ -48,7 +48,7 @@ async function missionRegister(req, res) {
 
         // Create new Mission document
         const newMission = new Mission({
-            project,                     // required
+            project: project || null,                  // required
             plot: plot || null,          // optional
             missionId,                   // required
             numImages: numImages || 0,
