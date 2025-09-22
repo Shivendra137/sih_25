@@ -27,6 +27,7 @@ const MissionSchema = new Schema({
   created_at: { type: Date, default: Date.now },
   avgCanopyFraction: { type: Number, default: 0.0 }, // 0..1
   notes: { type: String },
+  
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
