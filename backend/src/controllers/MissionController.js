@@ -3,7 +3,7 @@ async function verify(req,res){
     const verifier = req.user;
     const missionId = req.params.id;
     const {action,notes} = req.body;
-    const mission = await Mission.findBy(missionId);
+    const mission = await Mission.findById(missionId);
     if(!mission) return res.status(404).json({
         error : 'Mission not found'
     });
