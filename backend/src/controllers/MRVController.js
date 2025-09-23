@@ -1,40 +1,78 @@
-const Mission = require('../models/Mission')
-const User = require('../models/User')
-const Plot = require('../models/Plot')
-async function runMRV(req,res){
+const Mission = require('../models/Mission');
+const MRVResult = require('../models/MRVResult');
+
+async function runMRV(req, res) {
+
+  try {
     const missionId = req.params.id;
+
     const mission = await Mission.findById(missionId);
-    console.log(mission.project);
-    if(!mission) return res.status(404).json({
-        error : 'Mission not found'
-    });
-    if(mission.status !== "verified"){
+
+
+    if (!mission) return res.status(404).json({ error: 'Mission not found' });
+
+    if(mission.MRVsubmitted){
         return res.status(400).json({
-            error : 'Mission not verified'
-        });
+            message: "MRV of this mission already added for verification"
+        })
     }
-    // const plot = await Plot.findById(mission.plot);
-    const areaHa = 1; // default to 1 ha if not specified
-    const numberOfSeedlings = mission.numberOfSeedlings;
-    const seedling_density_per_ha = numberOfSeedlings/areaHa;
-    //assuming avgCanopyFraction is between 0 and 1
-    const avgCanopyFraction = mission.avgCanopyFraction;
-    const survivalRate = 0.9; // 90% survival rate
-    const agb_per_ha = 10 * avgCanopyFraction; // simplistic model: 10 tons per ha at full canopy
-    const carbon_per_ha = agb_per_ha * 0.5; // 50% of AGB is carbon
-    const co2e_per_ha = carbon_per_ha * 3.67; // convert C to CO2e
-    const total_agb = agb_per_ha * areaHa * survivalRate; // adjusted for survival
+    
+    // if (mission.status !== 'pending ') {
+    //   return res.status(400).json({ error: 'Mission not verified' });
+    // }
+
+    // --- MRV Calculation ---
+    const areaHa = mission.areaHa || 1; // default 1 ha
+    const numberOfSeedlings = mission.numberOfSeedlings || 0;
+    const seedling_density_per_ha = numberOfSeedlings / areaHa;
+
+    const avgCanopyFraction = mission.avgCanopyFraction || 0.5;
+    const survivalRate = 0.9; // 90% survival
+
+    const agb_per_ha = 10 * avgCanopyFraction; // tons per ha
+    const carbon_per_ha = agb_per_ha * 0.5;    // 50% carbon
+    const co2e_per_ha = carbon_per_ha * 3.67;  // CO2e conversion
+
+    const total_agb = agb_per_ha * areaHa * survivalRate;
     const total_carbon = carbon_per_ha * areaHa * survivalRate;
     const total_co2e = co2e_per_ha * areaHa * survivalRate;
-    return res.status(200).json({
+
+    // Save MRVResult to DB
+    const mrvResult = await MRVResult.create({
+      mission: mission._id,
+      agbKg: total_agb * 1000,       // convert to kg
+      carbonKg: total_carbon * 1000,
+      co2eKg: total_co2e * 1000,
+      finalTokenAmount: total_co2e * 1000, // kg CO2e
+      survivalRate,
+      payload: {
         areaHa,
         seedling_density_per_ha,
         avgCanopyFraction,
-        survivalRate,
+        agb_per_ha,
+        carbon_per_ha,
+        co2e_per_ha,
         total_agb,
         total_carbon,
         total_co2e
+      },
+      status: 'pending'
     });
+
+    // Update mission with MRV results (optional)
+    mission.MRVsubmitted= true;
+    await mission.save();
+
+    console.log(mrvResult)
+    res.status(200).json({
+      message: 'MRV calculation complete',
+      mrvResult
+    });
+
+  } catch (error) {
+    console.error('Error running MRV:', error);
+    res.status(500).json({ error: 'Server error while running MRV' });
+  }
 }
 
-module.exports = runMRV
+module.exports = runMRV;

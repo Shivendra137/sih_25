@@ -28,6 +28,7 @@ const MissionSchema = new Schema({
   avgCanopyFraction: { type: Number, default: 0.0 }, // 0..1
   numberOfSeedlings : {type : Number, default: 0},
   notes: { type: String },
+  MRVsubmitted : {type: Boolean, default: false },
 
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
