@@ -17,7 +17,7 @@ const { Schema } = mongoose;
 */
 const MissionSchema = new Schema({
   project: { type: String, ref: 'Project', required: true, index: true },
-  plot: { type: String, ref: 'Plot' },      // optional: mission may cover multiple plots later
+  plot: { type: Schema.Types.ObjectId, ref: 'Plot' },      // optional: mission may cover multiple plots later
   missionId: { type: String, required: true, index: true },
   numImages: { type: Number, default: 0 },
   status : {type: String, enum:["pending","verified","rejected"],default : "pending"},
@@ -26,6 +26,7 @@ const MissionSchema = new Schema({
   verification_notes: { type: String },
   created_at: { type: Date, default: Date.now },
   avgCanopyFraction: { type: Number, default: 0.0 }, // 0..1
+  numberOfSeedlings : {type : Number, default: 0},
   notes: { type: String },
   
   createdAt: { type: Date, default: Date.now }
