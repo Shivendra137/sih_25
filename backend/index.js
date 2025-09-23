@@ -1,15 +1,15 @@
-
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const owner =require("./src/routes/owner")
 
+const ownerRoutes = require("./src/routes/owner");
+const verifier = require("./src/routes/verifier")
 const app = express();
 
 // Middleware
 app.use(express.json()); // to parse JSON requests
 
-
+app.use(express.urlencoded({ extended: true })); // <--- for form data
 
 // Connect MongoDB
 mongoose
@@ -18,10 +18,13 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 
-app.use('/api/owner', owner);
+  
+app.use("/api/owner", ownerRoutes);
+app.use("/api/verifier", verifier);
 
 const PORT = process.env.PORT || 4000;
+
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)});
-
-
+  console.log(`Server running on http://localhost:${PORT}`);
+});
