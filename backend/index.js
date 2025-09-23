@@ -32,6 +32,8 @@ mongoose
 app.use("/api/owner", ownerRoutes);
 app.use("/api/verifier", verifier); 
 app.use("/api/auth", authRoutes);
+
+
 const PORT = process.env.PORT || 4000;
 
 
