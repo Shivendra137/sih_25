@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { missionRegister,verify } = require('../controllers/MissionRegister'); // import your controller
+const { missionRegister, uploadMiddleware } = require('../controllers/MissionRegister');
 
-// Route for registering a mission
-router.post('/missionRegister', missionRegister);
-
-
+router.post('/missionRegister', uploadMiddleware, missionRegister);
 
 module.exports = router;

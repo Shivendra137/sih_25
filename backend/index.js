@@ -7,6 +7,15 @@ const verifier = require("./src/routes/verifier")
 const authRoutes = require("./src/routes/auth");
 const app = express();
 
+const cors = require("cors");
+
+// Add this BEFORE your routes
+app.use(cors({
+  origin: "http://localhost:8080", // frontend origin
+  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true
+}));
+
 // Middleware
 app.use(express.json()); // to parse JSON requests
 

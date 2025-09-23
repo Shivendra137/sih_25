@@ -7,27 +7,27 @@ const { Schema } = mongoose;
  * avgCanopyFraction: aggregated canopy fraction across images (0..1)
  */
 
-
 /*
 -verification_status
 - 'pending' | 'verified' | 'rejected'
--verified_by: { type: Schema.Types.ObjectId, ref: 'User' },
--verified_at: { type: Date },
--verified_notes: { type: String },
+- verified_by: { type: Schema.Types.ObjectId, ref: 'User' },
+- verified_at: { type: Date },
+- verification_notes: { type: String },
 */
 const MissionSchema = new Schema({
   project: { type: String, ref: 'Project', required: true, index: true },
   plot: { type: String, ref: 'Plot' },      // optional: mission may cover multiple plots later
   missionId: { type: String, required: true, index: true },
   numImages: { type: Number, default: 0 },
-  status : {type: String, enum:["pending","verified","rejected"],default : "pending"},
+  files: [{ type: String }],               // store uploaded file names/paths
+  status: { type: String, enum: ["pending", "verified", "rejected"], default: "pending" },
   verified_by: { type: Schema.Types.ObjectId, ref: 'User' },
   verified_at: { type: Date },
   verification_notes: { type: String },
   created_at: { type: Date, default: Date.now },
   avgCanopyFraction: { type: Number, default: 0.0 }, // 0..1
   notes: { type: String },
-  
+
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 
