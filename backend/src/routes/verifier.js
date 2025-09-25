@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { verify } = require('../controllers/missionVerifier'); // import your controller
-
-// Route for verifying a mission
+const { verify } = require('../controllers/missionVerifier'); 
 router.post('/verify/:id', verify);
 
 module.exports= router

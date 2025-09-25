@@ -4,7 +4,7 @@ const { sha256HexFromString} = require('../utils/hash');
 // require('dotenv').config();
 const ABI = require('../../../blockchain/artifacts/contracts/MRVAnchor.sol/MRVAnchor.json').abi;
 const ALCHEMY_API_URL=  "http://127.0.0.1:8545"
-const CONTRACT_ADDRESS="0x5FbDB2315678afecb367f032d93F642f64180aa3"
+const CONTRACT_ADDRESS="0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
 const PRIVATE_KEY="0x689af8efa8c651a91ad287602527f3af2fe9f6501a7ac4b061667b5a93e037fd"
 async function anchorReport(reportObject, missionId) {
   const ipfsCid = await uploadJsonToPinataMock(reportObject);
@@ -17,7 +17,6 @@ async function anchorReport(reportObject, missionId) {
   const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
     console.log('Contract address:', contract.target || contract.address || contract);
 try {
-  // list ABI function names
   console.log('Contract functions (interface):', contract.interface ? contract.interface.fragments.map(f => f.name) : Object.keys(contract));
 } catch(e) {
   console.log('Could not read contract.interface:', e.message);
