@@ -12,20 +12,18 @@ const MRVSchema = new Schema({
   agbKg: { type: Number, default: 0.0 },
   carbonKg: { type: Number, default: 0.0 },
   co2eKg: { type: Number, default: 0.0 },
-  // Final tokenizable amount (kg CO2e)
   finalTokenAmount: { type: Number, default: 0.0 },
-  // Parameters applied during calculation (for auditability)
   survivalRate: { type: Number, default: 0.9 },
   bufferPct: { type: Number, default: 0.1 },
   leakagePct: { type: Number, default: 0.02 },
-  payload: { type: Schema.Types.Mixed }, // store full MRV input + step-by-step details
-  payloadSha256: { type: String },       // optional immutability check
-  ipfsCid: { type: String },             // optional pinned payload CID
-  status: { type: String, enum: ['pending','issued','rejected'], default: 'pending', index: true },
+  payload: { type: Schema.Types.Mixed }, 
+  payloadSha256: { type: String },       
+  ipfsCid: { type: String },             
+  txHash: { type: String },               // on-chain tx hash of anchor
+  blockNumber: { type: Number },        // block number of anchor tx
+  // status: { type: String, enum: ['pending','issued','rejected'], default: 'pending', index: true },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
-
-// quick lookup for pending results per project (via mission populate)
 MRVSchema.index({ status: 1, createdAt: -1 });
 
 module.exports = mongoose.model('MRVResult', MRVSchema);

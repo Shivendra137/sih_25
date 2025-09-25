@@ -1,6 +1,8 @@
 const Mission = require('../models/Mission')
+const MRVResult = require('../models/MRVResult')
 const User = require('../models/User')
-const Plot = require('../models/Plot')
+// const Plot = require('../models/Plot')
+const {anchorReport} = require('../services/anchorService')
 async function runMRV(req,res){
     const missionId = req.params.id;
     const mission = await Mission.findById(missionId);
@@ -26,7 +28,7 @@ async function runMRV(req,res){
     const total_agb = agb_per_ha * areaHa * survivalRate; // adjusted for survival
     const total_carbon = carbon_per_ha * areaHa * survivalRate;
     const total_co2e = co2e_per_ha * areaHa * survivalRate;
-    return res.status(200).json({
+    const payload = {
         areaHa,
         seedling_density_per_ha,
         avgCanopyFraction,
@@ -34,10 +36,37 @@ async function runMRV(req,res){
         total_agb,
         total_carbon,
         total_co2e
+    };
+    anchorReport(payload, missionId).then(async (anchorResult)=>{
+        console.log('Anchor result:', anchorResult);
+        const mrv = new MRVResult({
+            mission : missionId,
+            agbKg : total_agb * 1000,
+            carbonKg : total_carbon * 1000,
+            co2eKg : total_co2e * 1000,
+            finalTokenAmount : total_co2e * 1000, 
+            survivalRate,
+            payload,
+            payloadSha256 : anchorResult.reportHash,
+            ipfsCid : anchorResult.ipfsCid,
+            txHash : anchorResult.txHash,
+            blockNumber : anchorResult.blockNumber,
+            // status : 'verified'
+        });
+        await mrv.save();
+        // mission.status = 'mrv_completed';
+        await mission.save();
+        res.json({
+            message : 'MRV completed and anchored',
+            mrv
+        })
+    }).catch(err=>{
+        console.error('Error anchoring report:', err);
+        res.status(500).json({
+            error: 'Failed to anchor MRV report'
+        });
     });
-    
 }
-
 module.exports = {
     runMRV
 }
