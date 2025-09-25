@@ -1,13 +1,23 @@
+const hre = require("hardhat");
+
 async function main() {
-  const counter = await hre.ethers.deployContract("Counter");
+  console.log("Deploying MRVAnchor contract...");
 
-  await counter.waitForDeployment();
+  // Get the ContractFactory for MRVAnchor
+  const MRVAnchor = await hre.ethers.getContractFactory("MRVAnchor");
 
-  console.log(
-    `Counter deployed to: ${counter.target}`
-  );
+  // Deploy the contract
+  const mrvAnchor = await MRVAnchor.deploy();
+
+  // Wait for the deployment transaction to be mined
+  await mrvAnchor.waitForDeployment();
+
+  // Log the deployed address to the console
+  console.log(`✅ MRVAnchor contract deployed to: ${mrvAnchor.target}`);
 }
 
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;

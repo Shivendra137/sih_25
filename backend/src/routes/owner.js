@@ -4,5 +4,5 @@ const { missionRegister } = require('../controllers/MissionRegister'); // import
 const { runMRV } = require('../controllers/MRVController');
 router.post('/missionRegister', missionRegister);
 router.post('/missionMRV/:id', runMRV);
-
+router.post('/missionMRV/:id', runMRV); 
 module.exports = router;

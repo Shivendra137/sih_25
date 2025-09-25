@@ -30,5 +30,12 @@ async function uploadJsonToPinata(jsonObject) {
     throw error;
   }
 }
-
-module.exports = { uploadJsonToPinata };
+async function uploadJsonToPinataMock(jsonObject) {
+  const crypto = require("crypto");
+  const cid = crypto.createHash("sha256")
+    .update(JSON.stringify(jsonObject))
+    .digest("hex")
+    .slice(0, 46); 
+  return "Qm" + cid; 
+}
+module.exports = { uploadJsonToPinata, uploadJsonToPinataMock };
