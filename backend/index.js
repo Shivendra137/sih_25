@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const ownerRoutes = require("./src/routes/owner");
 const verifier = require("./src/routes/verifier")
 const authRoutes = require("./src/routes/auth");
+const { uploadJsonToPinata } = require("./src/utils/cid_form");
 const app = express();
 
 const cors = require("cors");
@@ -32,6 +33,7 @@ mongoose
 app.use("/api/owner", ownerRoutes);
 app.use("/api/verifier", verifier); 
 app.use("/api/auth", authRoutes);
+
 
 
 const PORT = process.env.PORT || 4000;

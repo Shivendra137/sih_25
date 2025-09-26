@@ -30,9 +30,13 @@ const uploadMiddleware = upload.array('files', 50); // max 50 files
 // Mission register handler
 async function missionRegister(req, res) {
   try {
-    const { project, plot, missionId, avgCanopyFraction, notes } = req.body;
-    if (!project || !missionId) {
-      return res.status(400).json({ error: "Project ID and Mission ID are required" });
+
+ 
+    const ownerId = req.params.id;
+    
+    const { missionLoc, avgCanopyFraction, notes } = req.body;
+    if (!missionLoc) {
+      return res.status(400).json({ error: "Mission Loc. is required" });
     }
 
     // Number of uploaded files
@@ -40,16 +44,17 @@ async function missionRegister(req, res) {
     const fileNames = req.files ? req.files.map(f => f.filename) : [];
 
     // Create new Mission document
-    const newMission = new Mission({
-      project,
-      plot: plot || null,
-      missionId,
+    const newMission = new Mission({ 
+      
+    
+      missionLoc,
       numImages,
       files: fileNames,   // ✅ <-- save file names here
       avgCanopyFraction: avgCanopyFraction || 0.0,
       notes: notes || '',
       status: 'pending',
-      created_at: new Date()
+      created_at: new Date(),
+      ownerId
     });
 
     await newMission.save();
