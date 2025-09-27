@@ -64,9 +64,12 @@ async function runMRV(req, res) {
     await mission.save();
 
 
+    const owner = await User.findById(mission.ownerId);
+    owner.pendingCredits+= total_co2e;
+    await owner.save();
     
     res.status(200).json({
-      message: "MRV completed",
+      message: "MRV completed", 
       mrv
      
     });

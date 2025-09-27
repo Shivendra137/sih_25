@@ -34,6 +34,16 @@ const userSchema = new mongoose.Schema(
       type : Number,
       default : 0
     },
+    totalEarnedCredits: {
+
+      type : Number,
+      default : 0
+    },
+    pendingCredits: {
+
+      type : Number,
+      default: 0
+    },
 
     createdAt: {
       type: Date,
