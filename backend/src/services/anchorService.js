@@ -3,17 +3,14 @@ const ALCHEMY_API_URL=  "https://eth-sepolia.g.alchemy.com/v2/tHa-TcRFNHi7rQ-2-J
 const CONTRACT_ADDRESS="0x4Eef4492491Bd65E3f29c3c8a52f772b3979EC05"
 const PRIVATE_KEY="ba0a3601e079e57d139681fe01589fae652f6cc673cbf2e542b358c0b17b4de8"
 const { ethers } = require('ethers');
-const { sha256HexFromString } = require('../utils/hash');
-const { uploadJsonToPinataMock } = require('../utils/cid_form'); // Assuming mock for now
+const { uploadJsonToPinata, uploadJsonToPinataMock } = require('../utils/cid_form');
+const { sha256HexFromString} = require('../utils/hash'); 
+// require('dotenv').config();
+const ABI = require('../../../blockchain/artifacts/contracts/MRVAnchor.sol/MRVAnchor.json').abi;
 
-// Load the ABI
-const { abi: anchorAbi } = require('../../../blockchain/artifacts/contracts/MRVAnchor.sol/MRVAnchor.json');
-
-// --- Service Logic ---
-const provider = new ethers.providers.JsonRpcProvider(ALCHEMY_API_URL);
-const signer = new ethers.Wallet(PRIVATE_KEY, provider);
-const contract = new ethers.Contract(CONTRACT_ADDRESS, anchorAbi, signer);
-
+const ALCHEMY_API_URL=  "http://127.0.0.1:8545"
+const CONTRACT_ADDRESS="0x5FbDB2315678afecb367f032d93F642f64180aa3"
+const PRIVATE_KEY="0x689af8efa8c651a91ad287602527f3af2fe9f6501a7ac4b061667b5a93e037fd"
 async function anchorReport(reportObject, missionId) {
     console.log("Preparing to anchor report...");
 

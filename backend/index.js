@@ -8,6 +8,15 @@ const authRoutes = require("./src/routes/auth");
 const { uploadJsonToPinata } = require("./src/utils/cid_form");
 const app = express();
 
+const cors = require("cors");
+
+// Add this BEFORE your routes
+app.use(cors({
+  origin: "http://localhost:8080", // frontend origin
+  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true
+}));
+
 // Middleware
 app.use(express.json()); // to parse JSON requests
 
@@ -24,15 +33,9 @@ mongoose
 app.use("/api/owner", ownerRoutes);
 app.use("/api/verifier", verifier); 
 app.use("/api/auth", authRoutes);
-app.post('/upload', async (req, res) => {
-  try {
-    const cid = await uploadJsonToPinata(req.body);
-    console.log("CID:", cid);
-    res.json({ cid });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+
+
+
 const PORT = process.env.PORT || 4000;
 
 

@@ -29,9 +29,20 @@ const userSchema = new mongoose.Schema(
       required : true
     },
 
-    walletAddress: {
-      type: String,
-      trim: true,
+    
+    wallet: {
+      type : Number,
+      default : 0
+    },
+    totalEarnedCredits: {
+
+      type : Number,
+      default : 0
+    },
+    pendingCredits: {
+
+      type : Number,
+      default: 0
     },
 
     createdAt: {

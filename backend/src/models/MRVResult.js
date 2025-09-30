@@ -21,7 +21,8 @@ const MRVSchema = new Schema({
   ipfsCid: { type: String },             
   txHash: { type: String },               // on-chain tx hash of anchor
   blockNumber: { type: Number },        // block number of anchor tx
-  // status: { type: String, enum: ['pending','issued','rejected'], default: 'pending', index: true },
+  status: { type: String,  default: "pending", index: true },
+  credits: {type : Number, default: 0.0},
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true });
 MRVSchema.index({ status: 1, createdAt: -1 });
